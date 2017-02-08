@@ -1,0 +1,57 @@
+<div id='api_settings'>
+    &nbsp;
+    <form action="?" method="get" enctype="multipart/form-data" name="save_settings" class="form-horizontal">
+        <fieldset>
+
+<h3>Выберите топливо</h3><br><br>
+
+	<label class="col-md-3">A92</label>
+	<input type="checkbox" name="A92" value="A92" checked><br><br>
+	
+	<label class="col-md-3">A95</label>
+	<input type="checkbox" name="A95" value="A95" checked><br><br>
+
+    <label class="col-md-3">A95E</label>
+	<input type="checkbox" name="A95E" value="A95E" checked><br><br>
+
+    <label class="col-md-3">Дизель</label>
+	<input type="checkbox" name="DT" value="DT" checked><br><br>
+
+    <label class="col-md-3">Газ</label>
+	<input type="checkbox" name="GAZ" value="GAZ" checked><br><br>
+
+     <select name="region">
+     <option value="" [#if region="" #] disabled selected="selected"> - Выберите область -</option>
+	 <option value="27" [#if region="27" #]  selected[#endif#]>Винницкая</option>
+     <option value="28" [#if region="28" #]  selected[#endif#]>Волынская</option>
+     <option value="04" [#if region="04" #]  selected[#endif#]>Днепропетровская</option>
+	 <option value="05" [#if region="05" #]  selected[#endif#]>Донецкая</option>
+     <option value="06" [#if region="06" #]  selected[#endif#]>Житомирская</option>
+	 <option value="07" [#if region="07" #]  selected[#endif#]>Закарпатская</option>
+     <option value="08" [#if region="08" #]  selected[#endif#]>Запорожская</option>
+     <option value="09" [#if region="09" #]  selected[#endif#]>Ивано-Франковская</option>
+     <option value="11" [#if region="11" #]  selected[#endif#]>Киевская</option>
+     <option value="12" [#if region="12" #]  selected[#endif#]>Кировоградская</option>
+	 <option value="10" [#if region="10" #]  selected[#endif#]>Крымская АР</option>
+     <option value="13" [#if region="13" #]  selected[#endif#]>Луганская</option>
+     <option value="14" [#if region="14" #]  selected[#endif#]>Львовская</option>
+     <option value="15" [#if region="15" #]  selected[#endif#]>Николаевская</option>
+     <option value="16" [#if region="16" #]  selected[#endif#]>Одесская</option>
+     <option value="17" [#if region="17" #]  selected[#endif#]>Полтавская</option>
+     <option value="18" [#if region="18" #]  selected[#endif#]>Ровенская</option>
+     <option value="19" [#if region="19" #]  selected[#endif#]>Сумская</option>
+     <option value="20" [#if region="20" #]  selected[#endif#]>Тернопольская</option>
+     <option value="21" [#if region="21" #]  selected[#endif#]>Харьковская</option>
+     <option value="22" [#if region="22" #]  selected[#endif#]>Херсонская</option>
+     <option value="23" [#if region="23" #]  selected[#endif#]>Хмельницкая</option>
+     <option value="24" [#if region="24" #]  selected[#endif#]>Черкасская</option>
+     <option value="25" [#if region="25" #]  selected[#endif#]>Черниговская</option>
+     <option value="26" [#if region="26" #]  selected[#endif#]>Черновицкая</option></select>
+
+<button type="submit" name="subm" value="settings" class="btn btn-primary">Выбрать</button><br><br>
+<label name="notification"><#LANG_NOTIFICATION#></label>
+ <br>
+ </fieldset>
+</form><br><br>
+<a href="http://majordomo.smartliving.ru/forum/" target="_blank">Обсуждение модуля на форуме</a>.<br>
+</div>
