@@ -115,14 +115,16 @@ class AZS extends module {
       if (!isset($reg)) return null;
       $url="https://privat24.privatbank.ua/p24/accountorder?oper=prp&avias=price&region=&type=&PUREXML=";
       $data = simplexml_load_file($url);
-
-      foreach ($data->xpath('//price') as $price) {
-        if($price['regionCode']==$reg and $price['type']==$type){
-        if ($price['price']!="0.00") sg("Price.".$type,$price['price']);
-        else sg("Price.".$type,"нет данных");
-        sg("Price.region",$price['region']);
-        break;
-        }}
+      if(!empty($data)){
+	      foreach ($data->xpath('//price') as $price) {
+		if($price['regionCode']==$reg and $price['type']==$type){
+		if ($price['price']!="0.00") sg("Price.".$type,$price['price']);
+		else sg("Price.".$type,"нет данных");
+		sg("Price.region",$price['region']);
+		break;
+		}
+    	      }
+      }
 }
 
    protected function SetAutoUpdate()
