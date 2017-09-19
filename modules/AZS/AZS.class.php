@@ -3,7 +3,7 @@
 * AZS 
 * @package project
 * @author Alex Sokolov <admin@gelezako.com>
-* @copyright Alex Sokolov http://www.xa-xa.pp.ua (c)
+* @copyright Alex Sokolov http://http://blog.gelezako.com (c)
 * @version 0.1 (wizard, 11:02:06 [Feb 06, 2017])
 */
 //
@@ -115,7 +115,7 @@ class AZS extends module {
       if (!isset($reg)) return null;
       $url="https://privat24.privatbank.ua/p24/accountorder?oper=prp&avias=price&region=&type=&PUREXML=";
       $data = simplexml_load_file($url);
-      if(!empty($data)){
+      if(!empty($data)  or !$data){
 	      foreach ($data->xpath('//price') as $price) {
 		if($price['regionCode']==$reg and $price['type']==$type){
 		if ($price['price']!="0.00") sg("Price.".$type,$price['price']);
@@ -200,7 +200,6 @@ public function get_settings(&$out,$region)
 */
  public function install($data='') {
  $className = 'AZS'; //имя класса
- $objectName = array('Price');//имя обьектов
  $objDescription = array('Цена на топливо');
  $rec = SQLSelectOne("SELECT ID FROM classes WHERE TITLE LIKE '" . DBSafe($className) . "'");
  
@@ -220,13 +219,7 @@ public function get_settings(&$out,$region)
             $obj_rec['ID'] = SQLInsert('objects', $obj_rec);
         }
     }
-	addClassProperty('Price', 'A80', 'include_once(DIR_MODULES."AZS/AZS.class.php");');
-	addClassProperty('Price', 'A92', 'include_once(DIR_MODULES."AZS/AZS.class.php");');
-	addClassProperty('Price', 'A95', 'include_once(DIR_MODULES."AZS/AZS.class.php");');
-	addClassProperty('Price', 'DT', 'include_once(DIR_MODULES."AZS/AZS.class.php");');
-	addClassProperty('Price', 'GAZ', 'include_once(DIR_MODULES."AZS/AZS.class.php");');
-	addClassProperty('Price', 'region', 'include_once(DIR_MODULES."AZS/AZS.class.php");');
-    $this->SetAutoUpdate();
+        $this->SetAutoUpdate();
 	parent::install();
  }
 
