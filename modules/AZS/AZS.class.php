@@ -110,54 +110,53 @@ class AZS extends module {
 *
 * @access public
 */
-
  protected function GetXMLPetrolPriceByRegionID($reg,$type){
+	 $type='';
+	 $price='';
       if (!isset($reg)) return null;
       $url="https://privat24.privatbank.ua/p24/accountorder?oper=prp&avias=price&region=&type=&PUREXML=";
-      $data = simplexml_load_file($url);
-      if(!empty($data)  or !$data){
-	      foreach ($data->xpath('//price') as $price) {
-		if($price['regionCode']==$reg and $price['type']==$type){
-		if ($price['price']!="0.00") sg("Price.".$type,$price['price']);
-		else sg("Price.".$type,"нет данных");
-		sg("Price.region",$price['region']);
-		break;
-		}
-    	      }
-      }
+      $data = @simplexml_load_file($url);
+		  if(!empty($data)){
+				foreach ($data->xpath('//price') as $price) {
+					if($price['regionCode']==$reg and $price['type']==$type){
+					if ($price['price']!="0.00") sg("Price.".$type,$price['price']);
+						   sg("Price.region",$price['region']);
+	                       break;
+					}
+				}
+		  }
+		  else if(!$data) {sg("Price.notification","нет данных");
+		  $out["notification"] = "Не удалось получить цены";}
+ 
 }
-
    protected function SetAutoUpdate()
    {
-      $code = '//START AZS module
+      $code = '
+	  //START AZS module
                         include_once(DIR_MODULES . \'AZS/AZS.class.php\');
                         $app_azs = new AZS();
-                        $app_asz->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"A80");
-                        $app_asz->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"A95");
-                        $app_asz->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"A95E");
-                        $app_asz->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"DT");
-                        $app_asz->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"GAZ");
-               // END AZS module';
-
+                        $app_azs->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"A80");
+                        $app_azs->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"A95");
+                        $app_azs->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"A95E");
+                        $app_azs->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"DT");
+                        $app_azs->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"GAZ");
+               // END AZS module
+			   ';
       $res = SQLSelectOne("SELECT ID, CODE FROM methods WHERE OBJECT_ID = '0' AND TITLE LIKE 'onNewHour'");
-
       if (!in_array($code, $res))
       {
          $res["CODE"] = $res["CODE"].$code;
          SQLUpdate('methods', $res);
       }
+	  sg("Price.AutoRun","1");
    }
-
-
 public function SaveData($region,$type) {
         $call=AZS::GetXMLPetrolPriceByRegionID($region,$type);
         if ($call!=null) $out["notification"] = "Данные успешно получены";
         else $out["notification"] = "Не удалось получить цены";
          
 }
-
 public function admin(&$out) {
-
 global $A92,$A95,$A95E,$DT,$GAZ,$region,$notification;
 if(isset($region)){
     $mas=[$A80,$A92,$A95,$A95E,$DT,$GAZ];
@@ -165,13 +164,11 @@ if(isset($region)){
         if(!empty($i)) 
         $this->SaveData($region,$i);
     }
-}
 
+}
 $this->get_settings($out,$region);
 }
-
-
-public function get_settings(&$out,$region)
+public function get_settings(&$out,$region,$notification)
 {
     $out["region"] = $region;
 	$out["A80"] = gg("Price.".$A80);
@@ -180,6 +177,7 @@ public function get_settings(&$out,$region)
     $out["A95E"] = gg("Price.".$A95E);
     $out["DT"] = gg("Price.".$DT);
     $out["GAZ"] = gg("Price.".$GAZ);
+	$out["notification"] = gg("Price.".$notification);
 }
 /**
 * FrontEnd
@@ -219,10 +217,9 @@ public function get_settings(&$out,$region)
             $obj_rec['ID'] = SQLInsert('objects', $obj_rec);
         }
     }
-        $this->SetAutoUpdate();
+	if((int)gg("Price.AutoRun")!=1){$this->SetAutoUpdate();}
 	parent::install();
  }
-
  public function uninstall()
    {
       SQLExec("delete from pvalues where property_id in (select id FROM properties where object_id in (select id from objects where class_id = (select id from classes where title = 'AZS')))");
