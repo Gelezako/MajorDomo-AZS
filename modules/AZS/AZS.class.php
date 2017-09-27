@@ -110,7 +110,7 @@ class AZS extends module {
 *
 * @access public
 */
- protected function GetXMLPetrolPriceByRegionID($reg,$type){
+ public function GetXMLPetrolPriceByRegionID($reg,$type){
 	 $type='';
 	 $price='';
       if (!isset($reg)) return null;
@@ -131,24 +131,14 @@ class AZS extends module {
 }
    protected function SetAutoUpdate()
    {
-      $code = '
-	  //START AZS module
-                        include_once(DIR_MODULES . \'AZS/AZS.class.php\');
+	   injectObjectMethodCode('ClockChime.onNewHour','AZS','include_once(DIR_MODULES . "AZS/AZS.class.php");
                         $app_azs = new AZS();
-                        $app_azs->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"A80");
-                        $app_azs->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"A95");
-                        $app_azs->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"A95E");
-                        $app_azs->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"DT");
-                        $app_azs->GetXMLPetrolPriceByRegionID(gg(\'Price.region\'),"GAZ");
-               // END AZS module
-			   ';
-      $res = SQLSelectOne("SELECT ID, CODE FROM methods WHERE OBJECT_ID = '0' AND TITLE LIKE 'onNewHour'");
-      if (!in_array($code, $res))
-      {
-         $res["CODE"] = $res["CODE"].$code;
-         SQLUpdate('methods', $res);
-      }
-	  sg("Price.AutoRun","1");
+                        $app_azs->GetXMLPetrolPriceByRegionID(gg("Price.region"),"A80");
+                        $app_azs->GetXMLPetrolPriceByRegionID(gg("Price.region"),"A95");
+                        $app_azs->GetXMLPetrolPriceByRegionID(gg("Price.region"),"A95E");
+                        $app_azs->GetXMLPetrolPriceByRegionID(gg("Price.region"),"DT");
+                        $app_azs->GetXMLPetrolPriceByRegionID(gg("Price.region"),"GAZ");
+			sg("Price.AutoRun","1");'); 
    }
 public function SaveData($region,$type) {
         $call=AZS::GetXMLPetrolPriceByRegionID($region,$type);
